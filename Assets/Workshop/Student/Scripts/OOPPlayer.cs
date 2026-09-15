@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.ProjectAuditor.Editor;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
@@ -43,9 +44,20 @@ namespace Solution
 
         public void UseFireStorm()
         {
-            if (inventory.HasItem("FireStorm",1))
+            if (inventory.HasItem("FireStorm", 1))
             {
                 //stundent exercise: use FireStorm to attack 3 lower energy enemies on map
+                inventory.UseItem("FireStom", 1);
+                OOPEnemy[] enemies = SortEnemiesByRemainningEnergy1();
+                int count = 3;
+                if (count > enemies.Length)
+                {
+                    count = enemies.Length;
+                }
+                for (int i = 0; i < count; i++)
+                {
+                    enemies[i].TakeDamage(10);
+                }
             }
             else
             {
@@ -56,6 +68,17 @@ namespace Solution
         {
             var enemies = mapGenerator.GetEnemies();
             //stundent exercise: sort enemies by remainning energy
+            for (int i = 0; i < enemies.Length - 1; i++)
+            {
+                int minIdex = i;
+                for (int j = 0; j < enemies.Length; j++)
+                {
+                    if (enemies[j].energy < enemies[minIdex].energy)
+                    {
+                    }
+                    (enemies[i], enemies[minIdex]) = (enemies[minIdex], enemies[i]);
+                }
+            }
 
             return enemies;
         }
@@ -64,7 +87,20 @@ namespace Solution
         {
             var enemies = mapGenerator.GetEnemies();
             //stundent exercise: sort enemies by remainning energy
-
+            Array.Sort(enemies, (a, b) => a.energy.CompareTo(b.energy));
+            //Array.Sort(enemies, (a, b) => {
+            //    if (a.energy < b.energy)
+            //    {
+            //        return -1;
+            //    }
+            //    else if (a.energy > b.energy)
+            //    {
+            //        return 1;
+            //    }
+            //    else { 
+            //        return 0;
+            //    }
+            //});
             return enemies;
         }
         public void Attack(OOPEnemy _enemy)
