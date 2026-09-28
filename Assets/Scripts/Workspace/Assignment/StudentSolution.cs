@@ -166,28 +166,31 @@ namespace Assignment
 
         public int EX01_FindLongestConsecutiveSequence(int[] numbers)
         {
-            Array.Sort(numbers);
+            if (numbers == null || numbers.Length == 0)
+                return 0;
 
-            int currentStreak = 1;
-            int longestStreak = 1;
+            HashSet<int> numSet = new HashSet<int>(numbers);
+            int longestStreak = 0;
 
-            for (int i = 1; i < numbers.Length; i++)
+            foreach (int num in numSet)
             {
-                if (numbers[i] == numbers[i - 1] + 1)
-                {
-                    currentStreak++;
-                }
-                else
-                {
-                    currentStreak = 1;
-                }
 
-                if (currentStreak > longestStreak)
+                if (!numSet.Contains(num - 1))
                 {
-                    longestStreak = currentStreak;
+                    int currentNum = num;
+                    int currentStreak = 1;
+
+                    while (numSet.Contains(currentNum + 1))
+                    {
+                        currentNum++;
+                        currentStreak++;
+                    }
+
+                    longestStreak = Mathf.Max(longestStreak, currentStreak);
                 }
             }
-            return 0;
+
+            return longestStreak;
         }
 
         #endregion
